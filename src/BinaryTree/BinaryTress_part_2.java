@@ -1,6 +1,10 @@
 package BinaryTree;
 
-public class HeightCountSum_Of_Nodes {
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class BinaryTress_part_2 {
     public static void main(String[] args) {
         Node root = new Node(1);
         root.left = new Node(2);
@@ -20,9 +24,71 @@ public class HeightCountSum_Of_Nodes {
         System.out.println(diameter1(root));   // O(n^2)
         System.out.println(diameter2(root).diam);   // O(n)
         System.out.println(isSubtree(root, subRoot));
+        topView(root);
 
 
     }
+
+    static class Node {       // why static class, how does that constructor working
+        int data;
+        Node left;
+        Node right;
+
+        Node(int data) {
+            this.data = data;
+            this.left = null;
+            this.right = null;
+        }
+    }
+
+    // -----------------------------------------------------TopView------------------------------------------
+    static class InfoTV{
+        Node node;
+        int hd;
+
+        public InfoTV(Node node, int hd) {
+            this.node = node;
+            this.hd = hd;
+        }
+    }
+    private static void topView(Node root) {
+        Queue<InfoTV> q = new LinkedList<>();
+        HashMap<Integer,Node> map = new HashMap<>();
+
+        int min = 0, max = 0;
+        q.add(new InfoTV(root,0));
+        q.add(null);
+
+        while (!q.isEmpty()){
+            InfoTV curr = q.remove();
+            if (curr == null){
+                if (q.isEmpty()){
+                    break;
+                }else {
+                    q.add(null);
+                }
+            }else {
+                if (!map.containsKey(curr.hd)){
+                    map.put(curr.hd,curr.node);
+                }
+                if (curr.node.left != null){
+                    q.add(new InfoTV(curr.node.left,curr.hd-1));
+                    min = Math.min(min,curr.hd-1);
+                }
+                if (curr.node.right != null){
+                    q.add(new InfoTV(curr.node.right,curr.hd +1));
+                    max = Math.max(max,curr.hd + 1);
+                }
+            }
+        }
+        for (int i = min; i <= max ; i++) {
+            System.out.print(map.get(i).data+" ");
+        }
+        System.out.println();
+    }
+    //-------------------------------------------------------------------------------------------------
+
+    //-------------------------------------------Comparing SubTree ------------------------------------
 
     public static boolean isSubtree(Node root, Node subRoot) {  // Revision needed
             if (root == null){
@@ -50,6 +116,9 @@ public class HeightCountSum_Of_Nodes {
 
         return true;
     }
+    //--------------------------------------------------------------------------------------------------
+
+    //-----------------------------------------------Diameter Approach 2--------------------------------
 
     static class Info {
         int diam;
@@ -75,6 +144,10 @@ public class HeightCountSum_Of_Nodes {
 
         return new Info(finalDiameter, finalHt);
     }
+//--------------------------------------------------------------------------------------------------
+
+//    ---------------------------------------------Diameter Approach 1-----------------------------------------------------
+
 
     private static int diameter1(Node root) {
         if (root == null) {
@@ -90,17 +163,9 @@ public class HeightCountSum_Of_Nodes {
         return Math.max(Math.max(leftDiam, rightDiam), selfDiameter);
     }
 
-    static class Node {       // why static class, how does that constructor working
-        int data;
-        Node left;
-        Node right;
+//    --------------------------------------------------------------------------------------------------
 
-        Node(int data) {
-            this.data = data;
-            this.left = null;
-            this.right = null;
-        }
-    }
+//    --------------------------------------------Height------------------------------------------------------
 
     public static int height(Node root) {
         if (root == null) {
@@ -111,6 +176,9 @@ public class HeightCountSum_Of_Nodes {
 
         return Math.max(lh, rh) + 1;
     }
+//    --------------------------------------------------------------------------------------------------
+
+//    ---------------------------------------------Count-----------------------------------------------------
 
     public static int count(Node root) {
         if (root == null) {
@@ -121,6 +189,9 @@ public class HeightCountSum_Of_Nodes {
 
         return lc + rc + 1;
     }
+    //    --------------------------------------------------------------------------------------------------
+
+//    ---------------------------------------------Sum-----------------------------------------------------
 
     public static int sum(Node root) {
         if (root == null) {
