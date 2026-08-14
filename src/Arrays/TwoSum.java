@@ -7,10 +7,13 @@ import java.util.HashSet;
 public class TwoSum {
     public static void main(String[] args) {
         int[] nums = {2,5,5,7,8};
-        System.out.print(Arrays.toString(twoSum(nums, 9)));
-        System.out.print(duplicates(nums));
-
+//        System.out.print(Arrays.toString(twoSum(nums, 9)));
+//        System.out.print(duplicates(nums));
+          System.out.print(Arrays.toString(twoSumSorted(nums, 8)));
     }
+
+    // HashMap approach
+
     public static int[] twoSum(int[] nums, int target){
         HashMap<Integer, Integer> seen = new HashMap<>();
         for (int i = 0; i < nums.length; i++) {
@@ -35,5 +38,34 @@ public class TwoSum {
             seen.add(numbers[i]);
         }
         return false;
+    }
+
+    // Two Pointer Approach
+
+    /*sorted array" is a signal for two pointers specifically
+    Hash map approach: O(n) time, but O(n) extra space
+    wo pointers approach: also O(n) time, but O(1) extra space
+     */
+
+    public static int[] twoSumSorted(int[] numbers, int target) {
+        int left = 0;
+        int right = numbers.length - 1;
+
+        while (left < right) {
+            int sum = numbers[left] + numbers[right];
+            if (sum > target){
+                right-- ;
+            }else if (sum == target){
+                break;
+            }else {
+                left++;
+            }
+        }
+        if (left < right) {
+            return new int[]{left, right};
+        } else {
+            System.out.println("No valid pair found");
+            return new int[]{-1, -1};
+        }
     }
 }
